@@ -2,7 +2,7 @@
 
 
 // LAYER CLASS
-// to-do suggestion: this could be made virtual as optmizer class to support 
+// to-do suggestion: this could be made a virtual interface to support different kinds of layers, like optimizer class
 
 namespace LayerFuncs{
 	// "a" stands for activation, "d" for derivative (used in backprop)
@@ -18,8 +18,8 @@ class Layer{
 	public:		
 		Function act, d_act;				
 		Matrix b, w;
-		vector<Matrix> gs; // "g" is gradient, "s" denotes plural because gradients are accumulated in batch learning
-		vector<Matrix> ins;
+		vector<Matrix> gs; // "g" is gradient: plural because gradients are accumulated in batch learning
+		vector<Matrix> ins; // inputs: have to be accumulated for batch learning to work (see apply_g)
 			
 		int input_size, output_size;
 
@@ -30,7 +30,7 @@ class Layer{
 			input_size = _input_size;
 			srand(time(0)); 
 			w = Matrix(new int[2]{output_size, input_size}).apply(init_gen);
-			b =	Matrix(new int[2]{output_size, 1}).apply(init_gen);
+			b = Matrix(new int[2]{output_size, 1}).apply(init_gen);
 		}
 
 		void prepare_batch_learning(int batch_size) 
@@ -51,11 +51,11 @@ class Layer{
 				Matrix &g = gs[0], &in = ins[0];
 				g.inp_scal_mul(eta);
 				b.inp_minus(g);
-		    	w.inp_minus(g.mat_mul(in.T()));
+		    		w.inp_minus(g.mat_mul(in.T()));
 			} else {
 				const Matrix g = Matrix::avg(gs).scal_mul(eta), in = Matrix::avg(ins);
-				b.inp_minus(g);						// Bx1
-		    	w.inp_minus(g.mat_mul(in.T()));		// BxA, BxA = Bx1 * 1xA (inp.T)	
+				b.inp_minus(g);				// Bx1
+		    		w.inp_minus(g.mat_mul(in.T()));		// BxA, BxA = Bx1 * 1xA (inp.T)	
 			}
 		}
 };
