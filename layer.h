@@ -43,19 +43,18 @@ class Layer{
 		
 		void back_fire(Matrix &d, const Matrix * next_layer_w, const Matrix * layer_out) const{
 			if (next_layer_w) d = next_layer_w->T().mat_mul(d);	// BxC * Cx1 = Bx1 = out dims
-			d.inp_dot_mul(layer_out->apply(d_act)); 				// back_val: Cx1 => Bx1							
+			d.inp_dot_mul(layer_out->apply(d_act)); 			// back_val: Cx1 => Bx1							
 		}
 			
 		void apply_g(const float eta){
-			if (gs.size() == 1) {
-				Matrix &g = gs[0], &in = ins[0];
-				g.inp_scal_mul(eta);
+			if (gs.size() == 1){
+				const Matrix &g = gs[0].inp_scal_mul(eta), &in = ins[0];
 				b.inp_minus(g);
-		    		w.inp_minus(g.mat_mul(in.T()));
+				w.inp_minus(g.mat_mul(in.T()));
 			} else {
-				const Matrix g = Matrix::avg(gs).scal_mul(eta), in = Matrix::avg(ins);
-				b.inp_minus(g);				// Bx1
-		    		w.inp_minus(g.mat_mul(in.T()));		// BxA, BxA = Bx1 * 1xA (inp.T)	
+				const Matrix &g = Matrix::avg(gs).scal_mul(eta), &in = Matrix::avg(ins);
+				b.inp_minus(g);						// Bx1
+		    	w.inp_minus(g.mat_mul(in.T()));		// BxA, BxA = Bx1 * 1xA (inp.T)	
 			}
 		}
 };

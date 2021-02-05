@@ -59,7 +59,8 @@ int main(){
 	// train
 	int epochs = 2000;
 	int print_counter = 100;
-	nn.train(inputs_train, targets_train, epochs, 1, 0.1, print_counter);
+	int batch_size = 10;
+	nn.train(inputs_train, targets_train, epochs, batch_size, 0.1, print_counter);
 	
 	cout << "Learning completed. Now veryfing with test set\n"; system("pause");
 	

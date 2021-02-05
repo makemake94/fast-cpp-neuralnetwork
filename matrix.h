@@ -180,14 +180,14 @@ class Matrix{
 		
 		// INPLACE VERSIONS
 
-		void inp_dot_mul(const Matrix &b){transform(data, data+data_size, b.data, data, multiplies<Value>());}
-		void inp_div(const Matrix &b){transform(data, data+data_size, b.data, data, divides<Value>());}		
-		void inp_scal_mul(const Value b){transform(data, data+data_size, data, bind(multiplies<Value>(), placeholders::_1, b));}
-		void inp_div(const Value b){transform(data, data+data_size, data, bind(divides<Value>(), placeholders::_1, b));}
-		void inp_sum(const Matrix &b){transform(data, data+data_size, b.data, data, plus<Value>());}
-		void inp_minus(const Matrix &b){transform(data, data+data_size, b.data, data, std::minus<Value>());}
-		void inp_pow(const Value b){transform(data, data+data_size, data, [b](Value d) {return powf(d, b);});}		
-		void inp_apply(const Function f){transform(data, data+data_size, data, f);}		
+		Matrix& inp_dot_mul(const Matrix &b){transform(data, data+data_size, b.data, data, multiplies<Value>()); return *this;}
+		Matrix& inp_div(const Matrix &b){transform(data, data+data_size, b.data, data, divides<Value>()); return *this;}		
+		Matrix& inp_scal_mul(const Value b){transform(data, data+data_size, data, bind(multiplies<Value>(), placeholders::_1, b)); return *this;}
+		Matrix& inp_div(const Value b){transform(data, data+data_size, data, bind(divides<Value>(), placeholders::_1, b)); return *this;}
+		Matrix& inp_sum(const Matrix &b){transform(data, data+data_size, b.data, data, plus<Value>()); return *this;}
+		Matrix& inp_minus(const Matrix &b){transform(data, data+data_size, b.data, data, std::minus<Value>()); return *this;}
+		Matrix& inp_pow(const Value b){transform(data, data+data_size, data, [b](Value d) {return powf(d, b);}); return *this;}		
+		Matrix& inp_apply(const Function f){transform(data, data+data_size, data, f); return *this;}		
 		
 		// OTHER FUNCTIONS
 		
@@ -200,7 +200,7 @@ class Matrix{
 			return Matrix(a[0].size, data2);
 		}
 		
-		// base printing
+		// base Matrix printing
 		void print(bool beautiful = true) const {
 			stringstream ss;
 			string line = string(4 * size[1] - 1, '-');

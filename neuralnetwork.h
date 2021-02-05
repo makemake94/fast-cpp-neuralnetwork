@@ -92,7 +92,7 @@ class NeuralNetwork{
 		void back_propagation(const Matrix &nn_output, const Matrix &target, const int batch_i = 0){
 			
 			// calcuate error derivative... first delta
-			Matrix d = d_err_func(nn_buffer, target);
+			Matrix d = d_err_func(nn_output, target);
 			
 			// output layer's params used in back_fire
 			const Matrix * next_layer_w = nullptr, * next_layer_in = &nn_output;
